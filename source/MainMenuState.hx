@@ -255,7 +255,7 @@ class MainMenuState extends MusicBeatState
 					});
 				}
 			}
-			#if sys
+			#if (desktop || android)
 			else if (FlxG.keys.anyJustPressed(debugKeys) #if android || virtualPad.buttonE.justPressed #end)
 			{
 				selectedSomethin = true;
