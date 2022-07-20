@@ -156,9 +156,9 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		reloadCheckboxes();
 
 		#if android
-	    addVirtualPad(RIGHT_FULL, A_B_C);
-        addPadCamera();
-        #end
+		addVirtualPad(LEFT_FULL, A_B_C);
+	        addPadCamera();
+	        #end
 
 	}
 
@@ -178,11 +178,11 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 		if (controls.BACK) {
 			#if android
-            flixel.addons.transition.FlxTransitionableState.skipNextTransOut = true;
+			flixel.addons.transition.FlxTransitionableState.skipNextTransOut = true;
 			FlxG.resetState();
-            #else
-            close();
-            #end
+	            	#else
+			close();
+	            	#end
 			ClientPrefs.saveSettings();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}

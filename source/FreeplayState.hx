@@ -291,7 +291,7 @@ class FreeplayState extends MusicBeatState
 		var ctrl = FlxG.keys.justPressed.CONTROL #if android || virtualPad.buttonX.justPressed #end;
 
 		var shiftMult:Int = 1;
-		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
+		if(FlxG.keys.pressed.SHIFT #if android || virtualPad.buttonZ.pressed #end) shiftMult = 3;
 
 		if(songs.length > 1)
 		{
@@ -318,6 +318,14 @@ class FreeplayState extends MusicBeatState
 					changeDiff();
 				}
 			}
+			#if !android
+			if(FlxG.mouse.wheel != 0)
+			{
+				FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+				changeSelection(-shiftMult * FlxG.mouse.wheel, false);
+				changeDiff();
+			}
+			#end
 		}
 
 		if (controls.UI_LEFT_P)
