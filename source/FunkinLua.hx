@@ -1311,7 +1311,7 @@ class FunkinLua {
 				PlayState.instance.startCountdown();
 			}
 			#end
-		);
+		});
 		
 		Lua_helper.add_callback(lua, "playMusic", function(sound:String, volume:Float = 1, loop:Bool = false) {
 			FlxG.sound.playMusic(Paths.music(sound), volume, loop);
