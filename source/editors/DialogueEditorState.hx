@@ -19,11 +19,7 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
-#if android
-import android.flixel.FlxButton;
-#else
 import flixel.ui.FlxButton;
-#end
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
@@ -105,8 +101,8 @@ class DialogueEditorState extends MusicBeatState
 		changeText();
 
 		#if android
-		addVirtualPad(FULL, A_B_C);
-		#end
+        addVirtualPad(RIGHT_FULL, A_B_C);
+        #end
 
 		super.create();
 	}
@@ -533,15 +529,11 @@ class DialogueEditorState extends MusicBeatState
 		var data:String = Json.stringify(dialogueFile, "\t");
 		if (data.length > 0)
 		{
-			#if android
-			SUtil.saveContent("dialogue", ".json", data);
-			#else
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data, "dialogue.json");
-			#end
 		}
 	}
 
