@@ -835,14 +835,13 @@ class EditorPlayState extends MusicBeatState
 		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
 		comboSpr.screenCenter();
 		comboSpr.x = coolText.x;
-		comboSpr.acceleration.y = 600;
-		comboSpr.velocity.y -= 150;
+		comboSpr.acceleration.y = FlxG.random.int(200, 300);
+		comboSpr.velocity.y -= FlxG.random.int(140, 160);
 		comboSpr.visible = !ClientPrefs.hideHud;
-		comboSpr.x += ClientPrefs.comboOffset[0];
-		comboSpr.y -= ClientPrefs.comboOffset[1];
+		comboSpr.x += ClientPrefs.comboOffset[4];
+		comboSpr.y -= ClientPrefs.comboOffset[5];
 
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
-		comboGroup.add(rating);
 
 		if (!PlayState.isPixelStage)
 		{
@@ -870,6 +869,7 @@ class EditorPlayState extends MusicBeatState
 		seperatedScore.push(combo % 10);
 
 		var daLoop:Int = 0;
+		
 		for (i in seperatedScore)
 		{
 			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
@@ -896,8 +896,14 @@ class EditorPlayState extends MusicBeatState
 			numScore.velocity.x = FlxG.random.float(-5, 5);
 			numScore.visible = !ClientPrefs.hideHud;
 
-			if (combo >= 10 || combo == 0)
-				insert(members.indexOf(strumLineNotes), numScore);
+			if(combo >= 10)	
+			{				
+			insert(members.indexOf(strumLineNotes), comboSpr);
+			insert(members.indexOf(strumLineNotes), numScore);
+			}
+			
+			insert(members.indexOf(strumLineNotes), rating);
+
 
 			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 				onComplete: function(tween:FlxTween)
