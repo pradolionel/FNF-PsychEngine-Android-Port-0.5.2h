@@ -1,4 +1,4 @@
-package openfl.display;
+package;
 
 import haxe.Timer;
 import openfl.events.Event;
@@ -46,7 +46,7 @@ class FPS extends TextField
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat("_sans", 14, color);
+		defaultTextFormat = new TextFormat("_sans", 12, color);
 		autoSize = LEFT;
 		multiline = true;
 		text = "FPS: ";
@@ -78,6 +78,7 @@ class FPS extends TextField
 
 		var currentCount = times.length;
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
+		var memPeak:Float = 0;
 		if (currentFPS > ClientPrefs.framerate) currentFPS = ClientPrefs.framerate;
 
 		if (currentCount != cacheCount /*&& visible*/)
@@ -87,7 +88,12 @@ class FPS extends TextField
 			
 			#if openfl
 			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
-			text += "\nMemory: " + memoryMegas + " MB";
+
+			if (memoryMegas > memPeak) 
+			memPeak = memoryMegas;
+
+			if (ClientPrefs.memCounter)
+			text += "\nMemory: " + memoryMegas + " MB / " + memPeak + "MB;
 			#end
 
 			textColor = 0xFFFFFFFF;

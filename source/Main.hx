@@ -1,12 +1,14 @@
 package;
 
+import flixel.math.FlxMath;
+import flixel.util.FlxColor;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Assets;
 import openfl.Lib;
-import openfl.display.FPS;
+import FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.display.StageScaleMode;
@@ -52,6 +54,10 @@ class Main extends Sprite
 		}
 
 		setupGame();
+		var timer = new haxe.Timer(1);
+		timer.run = function() {
+		coloring();
+		if (fpsVar.textColor == 0) fpsVar.textColor = -4775566;} // needs to be done because textcolor becomes black for a frame
 	}
 
 	private function setupGame():Void
@@ -91,5 +97,44 @@ class Main extends Sprite
 		FlxG.autoPause = false;
 		FlxG.mouse.visible = false;
 		#end
+	}
+
+	// Chroma Effect (12 Colors)
+	var array:Array<FlxColor> = [
+		FlxColor.fromRGB(216, 34, 83),
+		FlxColor.fromRGB(255, 38, 0),
+		FlxColor.fromRGB(255, 80, 0),
+		FlxColor.fromRGB(255, 147, 0),
+		FlxColor.fromRGB(255, 199, 0),
+		FlxColor.fromRGB(255, 255, 0),
+		FlxColor.fromRGB(202, 255, 0),
+		FlxColor.fromRGB(0, 255, 0),
+		FlxColor.fromRGB(0, 146, 146),
+		FlxColor.fromRGB(0, 0, 255),
+		FlxColor.fromRGB(82, 40, 204),
+		FlxColor.fromRGB(150, 33, 146)
+	];
+	var skippedFrames = 0;
+	var currentColor = 0;
+
+	// Event Handlers
+	public function coloring():Void
+	{
+		// Hippity, Hoppity, your code is now my property (from KadeEngine and from a fork)
+		if (ClientPrefs.rainbowFps) {
+		if (currentColor >= array.length)
+			currentColor = 0;
+		currentColor = Math.round(FlxMath.lerp(0, array.length, skippedFrames / ClientPrefs.framerate));
+		(cast(Lib.current.getChildAt(0), Main)).changeFPSColor(array[currentColor]);
+		currentColor++;
+		skippedFrames++;
+		if (skippedFrames > ClientPrefs.framerate)
+			skippedFrames = 0;
+		}
+		else fpsVar.textColor = FlxColor.fromRGB(255, 255, 255);
+	}
+	public function changeFPSColor(color:FlxColor)
+	{
+		fpsVar.textColor = color;
 	}
 }
