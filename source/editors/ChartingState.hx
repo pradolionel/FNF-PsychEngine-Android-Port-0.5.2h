@@ -915,7 +915,7 @@ class ChartingState extends MusicBeatState
 			key++;
 		}
 
-/*		#if LUA_ALLOWED
+		#if LUA_ALLOWED
 		var directories:Array<String> = [Paths.mods('custom_notetypes/'), Paths.mods(Paths.currentModDirectory + '/custom_notetypes/')];
 		for (i in 0...directories.length) {
 			var directory:String =  directories[i];
@@ -935,7 +935,7 @@ class ChartingState extends MusicBeatState
 			}
 		}
 		#end
-*/
+
 		for (i in 1...displayNameList.length) {
 			displayNameList[i] = i + '. ' + displayNameList[i];
 		}
@@ -968,7 +968,7 @@ class ChartingState extends MusicBeatState
 		var tab_group_event = new FlxUI(null, UI_box);
 		tab_group_event.name = 'Events';
 
-/*		#if LUA_ALLOWED
+		#if LUA_ALLOWED
 		var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
 		var directories:Array<String> = [Paths.mods('custom_events/'), Paths.mods(Paths.currentModDirectory + '/custom_events/')];
 		for (i in 0...directories.length) {
@@ -989,7 +989,7 @@ class ChartingState extends MusicBeatState
 		eventPushedMap.clear();
 		eventPushedMap = null;
 		#end
-*/
+
 		descText = new FlxText(20, 200, 0, eventStuff[0][0]);
 
 		var leEvents:Array<String> = [];
