@@ -95,7 +95,6 @@ class VisualsUISubState extends BaseOptionsMenu
 			'bool',
 			true);
 		addOption(option);
-
 		option.onChange = onChangeFPSCounter;
 	
 		var option:Option = new Option('Memory Counter',
@@ -141,15 +140,10 @@ class VisualsUISubState extends BaseOptionsMenu
 		if(changedMusic) FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		super.destroy();
 	}
-<<<<<<< HEAD
-=======
 
-	#if !mobile
 	function onChangeFPSCounter()
 	{
 		if(Main.fpsVar != null)
 			Main.fpsVar.visible = ClientPrefs.showFPS;
 	}
-	#end
->>>>>>> 6f9c7d3 (mem counter and rainbow colors wow)
 }
