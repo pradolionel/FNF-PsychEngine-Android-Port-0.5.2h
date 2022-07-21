@@ -33,6 +33,13 @@ jobs:
         with:
           haxe-version: 4.2.5
 
+      - name: Cache Export
+        id: cache-export
+        uses: actions/cache@v3
+        with:
+          path: export
+          key: ${{ runner.os }}-export
+
       - name: Install Haxelib
         run: |
           haxelib setup ~/haxelib
@@ -65,13 +72,6 @@ jobs:
 
       - name: Compile
         run: haxelib run lime build android -armv7 --app-version="4.0.0-${{ github.run_id}}"
-
-      - name: Cache Export
-        id: cache-export
-        uses: actions/cache@v3
-        with:
-          path: export
-          key: ${{ runner.os }}-export
 
       - name: Publish Artifact
         uses: actions/upload-artifact@v2.2.4
