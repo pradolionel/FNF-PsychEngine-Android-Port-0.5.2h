@@ -111,7 +111,7 @@ class EditorPlayState extends MusicBeatState
 			vocals = new FlxSound();
 
 		generateSong(PlayState.SONG.song);
-		#if LUA_ALLOWED
+/*		#if LUA_ALLOWED
 		for (notetype in noteTypeMap.keys()) {
 			var luaToLoad:String = Paths.modFolders('custom_notetypes/' + notetype + '.lua');
 			if(sys.FileSystem.exists(luaToLoad)) {
@@ -123,6 +123,7 @@ class EditorPlayState extends MusicBeatState
 			}
 		}
 		#end
+*/
 		noteTypeMap.clear();
 		noteTypeMap = null;
 
@@ -150,11 +151,6 @@ class EditorPlayState extends MusicBeatState
 		tipText.borderSize = 2;
 		tipText.scrollFactor.set();
 		add(tipText);
-
-		#if android
-		addAndroidControls();
-		#end
-
 		FlxG.mouse.visible = false;
 
 		//sayGo();
@@ -163,6 +159,15 @@ class EditorPlayState extends MusicBeatState
 			FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		}
+
+		#if android
+		addAndroidControls();
+		#end
+
+		#if android
+		androidc.visible = true;
+		#end
+
 		super.create();
 	}
 
@@ -320,10 +325,13 @@ class EditorPlayState extends MusicBeatState
 	}
 
 	override function update(elapsed:Float) {
-		if (FlxG.keys.justPressed.ESCAPE)
+		if (FlxG.keys.justPressed.ESCAPE #if android || FlxG.android.justReleased.BACK #end)
 		{
 			FlxG.sound.music.pause();
 			vocals.pause();
+                        #if android
+                        androidc.visible = false;
+                        #end
 			LoadingState.loadAndSwitchState(new editors.ChartingState());
 		}
 
