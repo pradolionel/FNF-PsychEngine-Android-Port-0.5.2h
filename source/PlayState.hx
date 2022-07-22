@@ -57,6 +57,7 @@ import FunkinLua;
 import DialogueBoxPsych;
 #if sys
 import sys.FileSystem;
+import sys.File
 #end
 
 #if !flash 
