@@ -19,7 +19,11 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
+#if android
+import android.flixel.FlxButton;
+#else
 import flixel.ui.FlxButton;
+#end
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
@@ -156,6 +160,12 @@ class DialogueCharacterEditorState extends MusicBeatState
 		addEditorBox();
 		FlxG.mouse.visible = true;
 		updateCharTypeBox();
+
+		#if android
+		addVirtualPad(LEFT_FULL, A_B_C_X_Y);
+		addPadCamera();
+		virtualPad.y = -300;
+		#end
 		
 		super.create();
 	}
@@ -559,10 +569,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 			}
 
 			var negaMult:Array<Int> = [1, 1, -1, -1];
-			var controlArray:Array<Bool> = [
-				FlxG.keys.pressed.J, FlxG.keys.pressed.I,
-				FlxG.keys.pressed.L, FlxG.keys.pressed.K
-			];
+			var controlArray:Array<Bool> = [FlxG.keys.pressed.J, FlxG.keys.pressed.I, FlxG.keys.pressed.L, FlxG.keys.pressed.K];
 			for (i in 0...controlArray.length) {
 				if(controlArray[i]) {
 					if(i % 2 == 1) {
@@ -578,6 +585,35 @@ class DialogueCharacterEditorState extends MusicBeatState
 				var animShit:DialogueAnimArray = character.dialogueAnimations.get(curSelectedAnim);
 				var controlArrayLoop:Array<Bool> = [FlxG.keys.justPressed.A #if android || virtualPad.buttonLeft.justPressed #end, FlxG.keys.justPressed.W #if android || virtualPad.buttonUp.justPressed #end, FlxG.keys.justPressed.D #if android || virtualPad.buttonRight.justPressed #end, FlxG.keys.justPressed.S #if android || virtualPad.buttonDown.justPressed #end];
 				var controlArrayIdle:Array<Bool> = [FlxG.keys.justPressed.LEFT #if android || virtualPad.buttonLeft.justPressed #end, FlxG.keys.justPressed.UP #if android || virtualPad.buttonUp.justPressed #end, FlxG.keys.justPressed.RIGHT #if android || virtualPad.buttonRight.justPressed #end, FlxG.keys.justPressed.DOWN #if android || virtualPad.buttonDown.justPressed #end];
+
+				#if android
+				if (virtualPad.buttonC.pressed)
+				{
+					for (i in 0...controlArrayLoop.length) {
+						if(controlArrayLoop[i]) {
+							if(i % 2 == 1) {
+								animShit.loop_offsets[1] += offsetAdd * negaMult[i];
+							} else {
+								animShit.loop_offsets[0] += offsetAdd * negaMult[i];
+							}
+							moved = true;
+						}
+					}
+				}
+				else
+				{
+					for (i in 0...controlArrayIdle.length) {
+						if(controlArrayIdle[i]) {
+							if(i % 2 == 1) {
+								animShit.idle_offsets[1] += offsetAdd * negaMult[i];
+							} else {
+								animShit.idle_offsets[0] += offsetAdd * negaMult[i];
+							}
+							moved = true;
+						}
+					}
+				}
+				#else
 				for (i in 0...controlArrayLoop.length) {
 					if(controlArrayLoop[i]) {
 						if(i % 2 == 1) {
@@ -598,6 +634,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 						moved = true;
 					}
 				}
+				#end
 
 				if(moved) {
 					offsetLoopText.text = 'Loop: ' + animShit.loop_offsets;
@@ -690,7 +727,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 				}
 			}
 
-			if(FlxG.keys.justPressed.ESCAPE) {
+			if(FlxG.keys.justPressed.ESCAPE #if android || FlxG.android.justReleased.BACK #end) {
 				MusicBeatState.switchState(new editors.MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 1);
 				transitioning = true;
@@ -785,11 +822,15 @@ class DialogueCharacterEditorState extends MusicBeatState
 			var splittedImage:Array<String> = imageInputText.text.trim().split('_');
 			var characterName:String = splittedImage[0].toLowerCase().replace(' ', '');
 
+			#if android
+			SUtil.saveContent(characterName, ".json", data);
+			#else
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data, characterName + ".json");
+			#end
 		}
 	}
 
