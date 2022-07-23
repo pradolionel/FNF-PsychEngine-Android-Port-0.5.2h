@@ -9,10 +9,6 @@ import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.math.FlxMath;
 
-#if android		
-addVirtualPad(FULL, A_B);	
-#end
-
 using StringTools;
 
 class NoteSkinState extends MusicBeatState {
