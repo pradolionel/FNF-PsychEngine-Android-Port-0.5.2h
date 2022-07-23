@@ -66,6 +66,11 @@ class OptionsState extends MusicBeatState
 				removeVirtualPad();
 				#end
 				LoadingState.loadAndSwitchState(new options.NoteOffsetState());
+                        case 'Note Skins':	
+                        #if android
+			removeVirtualPad();
+			#end			
+                        LoadingState.loadAndSwitchState(new options.NoteSkinState());
 		}
 	}
 
