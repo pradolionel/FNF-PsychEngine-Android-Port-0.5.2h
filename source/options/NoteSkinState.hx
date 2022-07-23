@@ -8,13 +8,16 @@ import flixel.addons.text.FlxTypeText;
 import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.math.FlxMath;
+import flixel.util.FlxColor;
 
 using StringTools;
 
 class NoteSkinState extends MusicBeatState {
    
     private var grpSkins:FlxTypedGroup<Alphabet>;
+    private var grpNotes:FlxTypedGroup<FlxSprite>;
     private var skinText:Alphabet;
+    private var helpText:FlxText;
     public static var curSelected:Int = 0;
 
     var bg:FlxSprite;
@@ -38,11 +41,16 @@ class NoteSkinState extends MusicBeatState {
 
         grpSkins = new FlxTypedGroup<Alphabet>();
 		add(grpSkins);
+        grpNotes = new FlxTypedGroup<FlxSprite>();
+        add(grpNotes);
 
+        var skinPath:String = 'mods/noteSkins/';
+        var path:String = Paths.modFolders(skinPath);
+        SUtil.getPath() + (path);
 
-        if(if (FileSystem.exists(SUtil.getPath() + "mods/noteSkins)){
+        if(FileSystem.exists(path)) {
             trace("Note skins found");
-            for(file in FileSystem.readDirectory + "mods/noteSkins)) {
+            for(file in FileSystem.readDirectory(path)) {
                 if(StringTools.contains(file, '.xml')) {
                     var skinName = StringTools.replace(file, ".xml", "");
                     trace('Found note skin ' + skinName);
@@ -63,13 +71,20 @@ class NoteSkinState extends MusicBeatState {
         //     skinText.targetY = i;
         //     grpSkins.add(skinText);
         // }
+        
+        previewSkin();
+
 
         skinText = new Alphabet(0, 100, skinList[curSelected], true, false);
         skinText.isMenuItem = true;
         skinText.screenCenter();
         grpSkins.add(skinText);
-    
-    }    
+        
+        helpText = new FlxText((FlxG.width/2) - 300, (FlxG.height/2) + 100, FlxG.width, "Use the up and down arrow keys to select a skin. Press enter to select.");
+        helpText.scrollFactor.set();
+        helpText.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+        add(helpText);
+    }
 
     
     override function update(elapsed:Float) {
@@ -86,6 +101,9 @@ class NoteSkinState extends MusicBeatState {
         if(accepted) {
             acceptSkin();
         }
+
+        grpNotes.clear();
+        previewSkin();
     }
 
     function changeSkin(down:Bool = true) {
@@ -98,6 +116,9 @@ class NoteSkinState extends MusicBeatState {
         if(curSelected >= skinList.length) {
             curSelected = 0;
         }
+        else if(curSelected < 0) {
+            curSelected = skinList.length - 1;
+        }
         skinText.changeText(skinList[curSelected]);
     }
 
@@ -106,5 +127,20 @@ class NoteSkinState extends MusicBeatState {
         FlxG.save.data.arrowSkin = 'noteSkins\x2f'+skinName;
         trace(FlxG.save.data.arrowSkin);
         MusicBeatState.switchState(new options.OptionsState());
+    }
+
+    function previewSkin() {
+        var arrows:Array<String> = ['purple0', 'blue0', 'green0', 'red0'];
+        for (i in 0...arrows.length) {
+            var arrow:FlxSprite = new FlxSprite((FlxG.width/2) - 250 + Note.swagWidth * i , (FlxG.height/2) - 200);
+            arrow.scale.set(0.7, 0.7);
+			
+			arrow.frames = Paths.getSparrowAtlas('noteSkins/' + skinList[curSelected]);
+
+            arrow.animation.addByPrefix('idle', arrows[i]);
+            arrow.animation.play('idle');
+            arrow.antialiasing = ClientPrefs.globalAntialiasing;
+            grpNotes.add(arrow);
+        }
     }
 }
