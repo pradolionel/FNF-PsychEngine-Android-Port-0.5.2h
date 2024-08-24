@@ -36,7 +36,6 @@ class FreeplayState extends MusicBeatState
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
 	var diffText:FlxText;
-        var countText:FlxText;
 	var lerpScore:Int = 0;
 	var lerpRating:Float = 0;
 	var intendedScore:Int = 0;
@@ -153,10 +152,6 @@ class FreeplayState extends MusicBeatState
 
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
 		diffText.font = scoreText.font;
-		
-		countText = new FlxText(scoreText.x, scoreText.y + 12, 0, "", 32);		countText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);		countText.borderSize = 1.25;
-        add(countText);
-
 		add(diffText);
 
 		add(scoreText);
@@ -198,32 +193,16 @@ class FreeplayState extends MusicBeatState
 		add(textBG);
 
 		#if PRELOAD_ALL
-			#if android
-			var leText:String = "Press X to listen to the Song / Press C to open the Gameplay Changers Menu / Press Y to Reset your Score and Accuracy.";
-			var size:Int = 16;
-			#else
-			var leText:String = "Press SPACE to listen to the Song / Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
-			var size:Int = 16;
-			#end
+		var leText:String = "Press SPACE to listen to the Song / Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
+		var size:Int = 16;
 		#else
-			#if android
-			var leText:String = "Press C to open the Gameplay Changers Menu / Press Y to Reset your Score and Accuracy.";
-			var size:Int = 18;
-			#else
-			var leText:String = "Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
-			var size:Int = 18;
-			#end
+		var leText:String = "Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
+		var size:Int = 18;
 		#end
 		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
 		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
 		add(text);
-
-		#if android
-		addVirtualPad(LEFT_FULL, A_B_C_X_Y_Z);
-		virtualPad.y = -26;
-		#end
-
 		super.create();
 	}
 
@@ -292,11 +271,11 @@ class FreeplayState extends MusicBeatState
 		var upP = controls.UI_UP_P;
 		var downP = controls.UI_DOWN_P;
 		var accepted = controls.ACCEPT;
-		var space = FlxG.keys.justPressed.SPACE #if android || virtualPad.buttonX.justPressed #end;
-		var ctrl = FlxG.keys.justPressed.CONTROL #if android || virtualPad.buttonC.justPressed #end;
+		var space = FlxG.keys.justPressed.SPACE;
+		var ctrl = FlxG.keys.justPressed.CONTROL;
 
 		var shiftMult:Int = 1;
-		if(FlxG.keys.pressed.SHIFT #if android || virtualPad.buttonZ.pressed #end) shiftMult = 3;
+		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
 		if(songs.length > 1)
 		{
@@ -323,14 +302,6 @@ class FreeplayState extends MusicBeatState
 					changeDiff();
 				}
 			}
-			#if !android
-			if(FlxG.mouse.wheel != 0)
-			{
-				FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
-				changeSelection(-shiftMult * FlxG.mouse.wheel, false);
-				changeDiff();
-			}
-			#end
 		}
 
 		if (controls.UI_LEFT_P)
@@ -351,9 +322,6 @@ class FreeplayState extends MusicBeatState
 
 		if(ctrl)
 		{
-			#if android
-			removeVirtualPad();
-			#end
 			persistentUpdate = false;
 			openSubState(new GameplayChangersSubstate());
 		}
@@ -418,11 +386,8 @@ class FreeplayState extends MusicBeatState
 					
 			destroyFreeplayVocals();
 		}
-		else if(controls.RESET #if android || virtualPad.buttonY.justPressed #end)
+		else if(controls.RESET)
 		{
-			#if android
-			removeVirtualPad();
-			#end
 			persistentUpdate = false;
 			openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
 			FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -559,14 +524,12 @@ class FreeplayState extends MusicBeatState
 	}
 
 	private function positionHighscore() {
-	    countText.text = "(" + ((curSelected + 1) + "/" + songs.length) + ")";
 		scoreText.x = FlxG.width - scoreText.width - 6;
 
 		scoreBG.scale.x = FlxG.width - scoreText.x + 6;
 		scoreBG.x = FlxG.width - (scoreBG.scale.x / 2);
 		diffText.x = Std.int(scoreBG.x + (scoreBG.width / 2));
 		diffText.x -= diffText.width / 2;
-		countText.x = Std.int(scoreBG.x - (scoreBG.scale.x / 2));		countText.x -= countText.width;
 	}
 }
 
