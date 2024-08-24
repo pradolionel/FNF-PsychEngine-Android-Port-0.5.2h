@@ -47,7 +47,7 @@ jobs:
           haxelib install flixel-addons 2.11.0
           haxelib git extension-videoview https://github.com/Sirox228/extension-videoview.git
           haxelib git linc_luajit https://github.com/Sirox228/linc_luajit.git
-          haxelib git extension-androidtools https://github.com/Sirox228/extension-androidtools.git
+          haxelib git extension-androidtools https://github.com/MaysLastPlay77/extension-androidtools.git
           haxelib list
 
       - name: Create Version Tag
