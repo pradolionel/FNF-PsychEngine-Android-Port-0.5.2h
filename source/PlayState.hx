@@ -4267,7 +4267,7 @@ class PlayState extends MusicBeatState
 		}
 
 		#if hscript
-		FunkinLua.haxeInterp = null;
+		//FunkinLua.haxeInterp = null;
 		#end
 
 		super.destroy();
