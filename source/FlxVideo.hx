@@ -5,7 +5,7 @@ import openfl.events.NetStatusEvent;
 import openfl.media.Video;
 #elseif android
 import extension.videoview.VideoView;
-import android.net.Uri;
+import android.Tools;
 #else
 import openfl.events.Event;
 import vlc.VlcBitmap;
@@ -50,7 +50,7 @@ class FlxVideo extends FlxBasic {
 		netStream.play(name);
 
 		#elseif android
-        VideoView.playVideo(Uri.fromFile(name));
+        VideoView.playVideo(Tools.fromFile(name));
         VideoView.onCompletion = function(){
 			if (finishCallback != null){
 			    finishCallback();
