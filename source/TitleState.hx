@@ -1,9 +1,9 @@
 package;
 
-#if desktop
+/*#if desktop
 import Discord.DiscordClient;
 import sys.thread.Thread;
-#end
+#end*/
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -198,7 +198,7 @@ class TitleState extends MusicBeatState
 			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new FlashingState());
 		} else {
-			#if desktop
+			/*#if desktop
 			if (!DiscordClient.isInitialized)
 			{
 				DiscordClient.initialize();
@@ -206,7 +206,7 @@ class TitleState extends MusicBeatState
 					DiscordClient.shutdown();
 				});
 			}
-			#end
+			#end*/
 
 			new FlxTimer().start(1, function(tmr:FlxTimer)
 			{
